@@ -66,7 +66,7 @@
     <Build Include="clients.sql" />
     <Build Include="stocks.sql" />
     <Build Include="orders.sql" />
-    <Build Include="statuses.sql" />
+    <Build Include="order_statuses.sql" />
     <Build Include="order_items.sql" />
     <Build Include="payment_statuses.sql" />
     <Build Include="payment_methods.sql" />
