@@ -18,6 +18,27 @@ namespace EShopPUA.Controllers
             return View();
         }
 
+        public IActionResult Categories()
+        {
+            return View();
+        }
+
+        public IActionResult Brands()
+        {
+            return View();
+        }
+
+        public IActionResult CustomerAccount()
+        {
+            return View();
+        }
+
+        public IActionResult Basket()
+        {
+            return View();
+        }
+
+
         public IActionResult Privacy()
         {
             return View();
