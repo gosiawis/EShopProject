@@ -16,9 +16,11 @@ namespace EShopPUA.Models
         {
         }
 
+        public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<Brand> Brands { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
+        public virtual DbSet<ClientsAddress> ClientsAddresses { get; set; } = null!;
         public virtual DbSet<District> Districts { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
@@ -40,13 +42,40 @@ namespace EShopPUA.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.ToTable("addresses");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ApartmentNumber).HasColumnName("apartment_number");
+
+                entity.Property(e => e.City).HasColumnName("city");
+
+                entity.Property(e => e.DistrictId).HasColumnName("district_id");
+
+                entity.Property(e => e.HouseNumber).HasColumnName("house_number");
+
+                entity.Property(e => e.Street).HasColumnName("street");
+
+                entity.Property(e => e.ZipCode).HasColumnName("zip_code");
+
+                entity.HasOne(d => d.District)
+                    .WithMany(p => p.Addresses)
+                    .HasForeignKey(d => d.DistrictId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("addresses_district_id_fk");
+            });
+
             modelBuilder.Entity<Brand>(entity =>
             {
                 entity.ToTable("brands");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DataAdded)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_added");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -55,9 +84,11 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("categories");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DataAdded)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_added");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -66,34 +97,41 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("clients");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
-
-                entity.Property(e => e.Address).HasColumnName("address");
-
-                entity.Property(e => e.DistrictId).HasColumnName("district_id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Email).HasColumnName("email");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
                 entity.Property(e => e.Surname).HasColumnName("surname");
+            });
 
-                entity.HasOne(d => d.District)
-                    .WithMany(p => p.Clients)
-                    .HasForeignKey(d => d.DistrictId)
+            modelBuilder.Entity<ClientsAddress>(entity =>
+            {
+                entity.ToTable("clients_addresses");
+
+                entity.Property(e => e.AddressId).HasColumnName("address_id");
+
+                entity.Property(e => e.ClientId).HasColumnName("client_id");
+
+                entity.HasOne(d => d.Address)
+                    .WithMany(p => p.ClientsAddresses)
+                    .HasForeignKey(d => d.AddressId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("clients_district_id_fk");
+                    .HasConstraintName("clients_addresses_address_id_fk");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.ClientsAddresses)
+                    .HasForeignKey(d => d.ClientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("clients_addresses_client_id_fk");
             });
 
             modelBuilder.Entity<District>(entity =>
             {
                 entity.ToTable("districts");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -102,9 +140,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("orders");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.ClientId).HasColumnName("client_id");
 
@@ -117,6 +153,10 @@ namespace EShopPUA.Models
                 entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
 
                 entity.Property(e => e.PaymentStatusId).HasColumnName("payment_status_id");
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("price")
+                    .HasDefaultValueSql("((0.00))");
 
                 entity.Property(e => e.StartDate)
                     .HasColumnType("datetime")
@@ -151,9 +191,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("order_items");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
 
@@ -178,9 +216,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("order_statuses");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -189,9 +225,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("payment_methods");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -200,9 +234,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("payment_statuses");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -211,15 +243,19 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("products");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.BrandId).HasColumnName("brand_id");
 
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
+                entity.Property(e => e.DataAdded)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_added");
+
                 entity.Property(e => e.Name).HasColumnName("name");
+
+                entity.Property(e => e.Picture).HasColumnName("picture");
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
@@ -242,9 +278,7 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("stocks");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 
@@ -269,13 +303,23 @@ namespace EShopPUA.Models
             {
                 entity.ToTable("warehouses");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Address).HasColumnName("address");
+                entity.Property(e => e.ApartmentNumber).HasColumnName("apartment_number");
+
+                entity.Property(e => e.City).HasColumnName("city");
 
                 entity.Property(e => e.DistrictId).HasColumnName("district_id");
+
+                entity.Property(e => e.HouseNumber).HasColumnName("house_number");
+
+                entity.Property(e => e.Name)
+                    .IsUnicode(false)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Street).HasColumnName("street");
+
+                entity.Property(e => e.ZipCode).HasColumnName("zip_code");
 
                 entity.HasOne(d => d.District)
                     .WithMany(p => p.Warehouses)

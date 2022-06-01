@@ -17,6 +17,8 @@ namespace EShopPUA.Models
         public int CategoryId { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
+        public byte[]? Picture { get; set; }
+        public DateTime DataAdded { get; set; }
 
         public virtual Brand Brand { get; set; } = null!;
         public virtual Category Category { get; set; } = null!;

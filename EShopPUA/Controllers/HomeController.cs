@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using EShopPUA.Models;
+﻿using EShopPUA.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace EShopPUA.Controllers
 {
@@ -18,26 +18,10 @@ namespace EShopPUA.Controllers
             return View();
         }
 
-        public IActionResult Categories()
-        {
-            return View();
-        }
-
         public IActionResult Brands()
         {
             return View();
         }
-
-        public IActionResult CustomerAccount()
-        {
-            return View();
-        }
-
-        public IActionResult Basket()
-        {
-            return View();
-        }
-
 
         public IActionResult Privacy()
         {

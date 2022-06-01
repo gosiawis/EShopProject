@@ -17,6 +17,7 @@ namespace EShopPUA.Models
         public int PaymentMethodId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public double Price { get; set; }
 
         public virtual Client Client { get; set; } = null!;
         public virtual OrderStatus OrderStatus { get; set; } = null!;
