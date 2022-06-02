@@ -9,4 +9,4 @@
     [price] FLOAT NOT NULL, 
     [quantity] INT NOT NULL DEFAULT 0, 
     [picture] VARBINARY(MAX) NULL DEFAULT NULL, 
-    [data_added] DATETIME NOT NULL)
+    [data_added] DATETIME NOT NULL DEFAULT getdate())
