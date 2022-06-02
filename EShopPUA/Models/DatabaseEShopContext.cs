@@ -35,7 +35,7 @@ namespace EShopPUA.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=WIN-AKLSU3I1TSV\\SQLEXPRESS;Database=DatabaseEShop;Trusted_Connection=True;");
+                //optionsBuilder.UseSqlServer("Server=WIN-AKLSU3I1TSV\\SQLEXPRESS;Database=DatabaseEShop;Trusted_Connection=True;");
             }
         }
 
