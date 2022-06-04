@@ -9,90 +9,87 @@ using EShopPUA.Models;
 
 namespace EShopPUA.Controllers
 {
-    public class WarehousesController : Controller
+    public class VoivodeshipsController : Controller
     {
         private readonly DatabaseEShopContext _context;
 
-        public WarehousesController(DatabaseEShopContext context)
+        public VoivodeshipsController(DatabaseEShopContext context)
         {
             _context = context;
         }
 
-        // GET: Warehouses
+        // GET: Voivodeships
         public async Task<IActionResult> Index()
         {
-            var databaseEShopContext = _context.Warehouses.Include(w => w.District);
-            return View(await databaseEShopContext.ToListAsync());
+              return _context.Voivodeships != null ? 
+                          View(await _context.Voivodeships.ToListAsync()) :
+                          Problem("Entity set 'DatabaseEShopContext.Voivodeships'  is null.");
         }
 
-        // GET: Warehouses/Details/5
+        // GET: Voivodeships/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Voivodeships == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
-                .Include(w => w.District)
+            var voivodeship = await _context.Voivodeships
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (voivodeship == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(voivodeship);
         }
 
-        // GET: Warehouses/Create
+        // GET: Voivodeships/Create
         public IActionResult Create()
         {
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Id");
             return View();
         }
 
-        // POST: Warehouses/Create
+        // POST: Voivodeships/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,DistrictId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Warehouse warehouse)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Voivodeship voivodeship)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(warehouse);
+                _context.Add(voivodeship);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Id", warehouse.DistrictId);
-            return View(warehouse);
+            return View(voivodeship);
         }
 
-        // GET: Warehouses/Edit/5
+        // GET: Voivodeships/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Voivodeships == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse == null)
+            var voivodeship = await _context.Voivodeships.FindAsync(id);
+            if (voivodeship == null)
             {
                 return NotFound();
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Id", warehouse.DistrictId);
-            return View(warehouse);
+            return View(voivodeship);
         }
 
-        // POST: Warehouses/Edit/5
+        // POST: Voivodeships/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,DistrictId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Warehouse warehouse)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Voivodeship voivodeship)
         {
-            if (id != warehouse.Id)
+            if (id != voivodeship.Id)
             {
                 return NotFound();
             }
@@ -101,12 +98,12 @@ namespace EShopPUA.Controllers
             {
                 try
                 {
-                    _context.Update(warehouse);
+                    _context.Update(voivodeship);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WarehouseExists(warehouse.Id))
+                    if (!VoivodeshipExists(voivodeship.Id))
                     {
                         return NotFound();
                     }
@@ -117,51 +114,49 @@ namespace EShopPUA.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "Id", "Id", warehouse.DistrictId);
-            return View(warehouse);
+            return View(voivodeship);
         }
 
-        // GET: Warehouses/Delete/5
+        // GET: Voivodeships/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Warehouses == null)
+            if (id == null || _context.Voivodeships == null)
             {
                 return NotFound();
             }
 
-            var warehouse = await _context.Warehouses
-                .Include(w => w.District)
+            var voivodeship = await _context.Voivodeships
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
+            if (voivodeship == null)
             {
                 return NotFound();
             }
 
-            return View(warehouse);
+            return View(voivodeship);
         }
 
-        // POST: Warehouses/Delete/5
+        // POST: Voivodeships/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Warehouses == null)
+            if (_context.Voivodeships == null)
             {
-                return Problem("Entity set 'DatabaseEShopContext.Warehouses'  is null.");
+                return Problem("Entity set 'DatabaseEShopContext.Voivodeships'  is null.");
             }
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse != null)
+            var voivodeship = await _context.Voivodeships.FindAsync(id);
+            if (voivodeship != null)
             {
-                _context.Warehouses.Remove(warehouse);
+                _context.Voivodeships.Remove(voivodeship);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WarehouseExists(int id)
+        private bool VoivodeshipExists(int id)
         {
-          return (_context.Warehouses?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Voivodeships?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

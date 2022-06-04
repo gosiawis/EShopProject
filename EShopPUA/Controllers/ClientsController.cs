@@ -21,9 +21,8 @@ namespace EShopPUA.Controllers
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-              return _context.Clients != null ? 
-                          View(await _context.Clients.ToListAsync()) :
-                          Problem("Entity set 'DatabaseEShopContext.Clients'  is null.");
+            var databaseEShopContext = _context.Clients.Include(c => c.Voivodeship);
+            return View(await databaseEShopContext.ToListAsync());
         }
 
         // GET: Clients/Details/5
@@ -35,6 +34,7 @@ namespace EShopPUA.Controllers
             }
 
             var client = await _context.Clients
+                .Include(c => c.Voivodeship)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
@@ -47,6 +47,7 @@ namespace EShopPUA.Controllers
         // GET: Clients/Create
         public IActionResult Create()
         {
+            ViewData["VoivodeshipId"] = new SelectList(_context.Voivodeships, "Id", "Id");
             return View();
         }
 
@@ -55,7 +56,7 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email")] Client client)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Client client)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +64,7 @@ namespace EShopPUA.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VoivodeshipId"] = new SelectList(_context.Voivodeships, "Id", "Id", client.VoivodeshipId);
             return View(client);
         }
 
@@ -79,6 +81,7 @@ namespace EShopPUA.Controllers
             {
                 return NotFound();
             }
+            ViewData["VoivodeshipId"] = new SelectList(_context.Voivodeships, "Id", "Id", client.VoivodeshipId);
             return View(client);
         }
 
@@ -87,7 +90,7 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email")] Client client)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Client client)
         {
             if (id != client.Id)
             {
@@ -114,6 +117,7 @@ namespace EShopPUA.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VoivodeshipId"] = new SelectList(_context.Voivodeships, "Id", "Id", client.VoivodeshipId);
             return View(client);
         }
 
@@ -126,6 +130,7 @@ namespace EShopPUA.Controllers
             }
 
             var client = await _context.Clients
+                .Include(c => c.Voivodeship)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {

@@ -25,7 +25,7 @@ builder.Services.AddControllersWithViews(options =>
         .RequireAuthenticatedUser()
         .Build();
     options.Filters.Add(new AuthorizeFilter(policy));*/
-});
+}).AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
     //.AddMicrosoftIdentityUI();
 

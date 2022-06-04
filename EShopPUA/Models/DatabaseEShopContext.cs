@@ -16,56 +16,28 @@ namespace EShopPUA.Models
         {
         }
 
-        public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<Brand> Brands { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
-        public virtual DbSet<ClientsAddress> ClientsAddresses { get; set; } = null!;
-        public virtual DbSet<District> Districts { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
         public virtual DbSet<PaymentStatus> PaymentStatuses { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<Stock> Stocks { get; set; } = null!;
-        public virtual DbSet<Warehouse> Warehouses { get; set; } = null!;
+        public virtual DbSet<Voivodeship> Voivodeships { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 //optionsBuilder.UseSqlServer("Server=WIN-AKLSU3I1TSV\\SQLEXPRESS;Database=DatabaseEShop;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Address>(entity =>
-            {
-                entity.ToTable("addresses");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.ApartmentNumber).HasColumnName("apartment_number");
-
-                entity.Property(e => e.City).HasColumnName("city");
-
-                entity.Property(e => e.DistrictId).HasColumnName("district_id");
-
-                entity.Property(e => e.HouseNumber).HasColumnName("house_number");
-
-                entity.Property(e => e.Street).HasColumnName("street");
-
-                entity.Property(e => e.ZipCode).HasColumnName("zip_code");
-
-                entity.HasOne(d => d.District)
-                    .WithMany(p => p.Addresses)
-                    .HasForeignKey(d => d.DistrictId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("addresses_district_id_fk");
-            });
-
             modelBuilder.Entity<Brand>(entity =>
             {
                 entity.ToTable("brands");
@@ -74,7 +46,8 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.DataAdded)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added");
+                    .HasColumnName("data_added")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -87,7 +60,8 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.DataAdded)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added");
+                    .HasColumnName("data_added")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -98,41 +72,29 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.ApartmentNumber).HasColumnName("apartment_number");
+
+                entity.Property(e => e.City).HasColumnName("city");
+
                 entity.Property(e => e.Email).HasColumnName("email");
 
+                entity.Property(e => e.HouseNumber).HasColumnName("house_number");
+
                 entity.Property(e => e.Name).HasColumnName("name");
+
+                entity.Property(e => e.Street).HasColumnName("street");
 
                 entity.Property(e => e.Surname).HasColumnName("surname");
-            });
 
-            modelBuilder.Entity<ClientsAddress>(entity =>
-            {
-                entity.ToTable("clients_addresses");
+                entity.Property(e => e.VoivodeshipId).HasColumnName("voivodeship_id");
 
-                entity.Property(e => e.AddressId).HasColumnName("address_id");
+                entity.Property(e => e.ZipCode).HasColumnName("zip_code");
 
-                entity.Property(e => e.ClientId).HasColumnName("client_id");
-
-                entity.HasOne(d => d.Address)
-                    .WithMany(p => p.ClientsAddresses)
-                    .HasForeignKey(d => d.AddressId)
+                entity.HasOne(d => d.Voivodeship)
+                    .WithMany(p => p.Clients)
+                    .HasForeignKey(d => d.VoivodeshipId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("clients_addresses_address_id_fk");
-
-                entity.HasOne(d => d.Client)
-                    .WithMany(p => p.ClientsAddresses)
-                    .HasForeignKey(d => d.ClientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("clients_addresses_client_id_fk");
-            });
-
-            modelBuilder.Entity<District>(entity =>
-            {
-                entity.ToTable("districts");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Name).HasColumnName("name");
+                    .HasConstraintName("clients_voivodeship_id_fk");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -250,7 +212,8 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.DataAdded)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added");
+                    .HasColumnName("data_added")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
@@ -273,58 +236,13 @@ namespace EShopPUA.Models
                     .HasConstraintName("products_category_id_fk");
             });
 
-            modelBuilder.Entity<Stock>(entity =>
+            modelBuilder.Entity<Voivodeship>(entity =>
             {
-                entity.ToTable("stocks");
+                entity.ToTable("voivodeships");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Stocks)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("stocks_product_id_fk");
-
-                entity.HasOne(d => d.Warehouse)
-                    .WithMany(p => p.Stocks)
-                    .HasForeignKey(d => d.WarehouseId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("stocks_warehouse_id_fk");
-            });
-
-            modelBuilder.Entity<Warehouse>(entity =>
-            {
-                entity.ToTable("warehouses");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.ApartmentNumber).HasColumnName("apartment_number");
-
-                entity.Property(e => e.City).HasColumnName("city");
-
-                entity.Property(e => e.DistrictId).HasColumnName("district_id");
-
-                entity.Property(e => e.HouseNumber).HasColumnName("house_number");
-
-                entity.Property(e => e.Name)
-                    .IsUnicode(false)
-                    .HasColumnName("name");
-
-                entity.Property(e => e.Street).HasColumnName("street");
-
-                entity.Property(e => e.ZipCode).HasColumnName("zip_code");
-
-                entity.HasOne(d => d.District)
-                    .WithMany(p => p.Warehouses)
-                    .HasForeignKey(d => d.DistrictId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("warehouses_district_id_fk");
+                entity.Property(e => e.Name).HasColumnName("name");
             });
 
             OnModelCreatingPartial(modelBuilder);

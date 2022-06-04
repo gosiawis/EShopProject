@@ -8,7 +8,6 @@ namespace EShopPUA.Models
         public Product()
         {
             OrderItems = new HashSet<OrderItem>();
-            Stocks = new HashSet<Stock>();
         }
 
         public int Id { get; set; }
@@ -20,9 +19,8 @@ namespace EShopPUA.Models
         public byte[]? Picture { get; set; }
         public DateTime DataAdded { get; set; }
 
-        public virtual Brand Brand { get; set; } = null!;
-        public virtual Category Category { get; set; } = null!;
+        public virtual Brand? Brand { get; set; } = null!;
+        public virtual Category? Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
-        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }
