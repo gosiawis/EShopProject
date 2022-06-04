@@ -62,17 +62,13 @@
     <Build Include="products.sql" />
     <Build Include="brands.sql" />
     <Build Include="categories.sql" />
-    <Build Include="warehouses.sql" />
-    <Build Include="districts.sql" />
+    <Build Include="voivodeships.sql" />
     <Build Include="clients.sql" />
-    <Build Include="stocks.sql" />
     <Build Include="orders.sql" />
     <Build Include="order_statuses.sql" />
     <Build Include="order_items.sql" />
     <Build Include="payment_statuses.sql" />
     <Build Include="payment_methods.sql" />
-    <Build Include="addresses.sql" />
-    <Build Include="clients_addresses.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DatabaseEShop.refactorlog" />

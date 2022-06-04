@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[districts]
+﻿CREATE TABLE [dbo].[voivodeships]
 (
 	[id] INT IDENTITY NOT NULL PRIMARY KEY, 
     [name] NVARCHAR(MAX) NOT NULL
