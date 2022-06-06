@@ -58,14 +58,14 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,CategoryId,Price,Quantity,Picture,DataAdded")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,CategoryId,Price,Quantity,Picture,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", product.BrandId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
             return View(product);
@@ -94,7 +94,7 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,CategoryId,Price,Quantity,Picture,DataAdded")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,CategoryId,Price,Quantity,Picture,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
             if (id != product.Id)
             {

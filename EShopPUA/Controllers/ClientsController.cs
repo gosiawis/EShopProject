@@ -56,14 +56,14 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Client client)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Client client)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(client);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["VoivodeshipId"] = new SelectList(_context.Voivodeships, "Id", "Id", client.VoivodeshipId);
             return View(client);
         }
@@ -90,7 +90,7 @@ namespace EShopPUA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode")] Client client)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,VoivodeshipId,City,Street,HouseNumber,ApartmentNumber,ZipCode,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Client client)
         {
             if (id != client.Id)
             {
