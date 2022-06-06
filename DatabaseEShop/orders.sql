@@ -5,7 +5,7 @@
 	[order_status_id] INT NOT NULL, 
     [payment_status_id] INT NOT NULL, 
     [payment_method_id] INT NOT NULL, 
-    [start_date] DATETIME NOT NULL, 
+    [start_date] DATETIME NOT NULL DEFAULT GetDate(), 
     [end_date] DATETIME NULL, 
     [price] FLOAT NOT NULL DEFAULT 0.00, 
     CONSTRAINT orders_client_id_fk FOREIGN KEY (client_id) REFERENCES clients ([id]),

@@ -9,4 +9,7 @@
     [price] FLOAT NOT NULL, 
     [quantity] INT NOT NULL DEFAULT 0, 
     [picture] VARBINARY(MAX) NULL DEFAULT NULL, 
-    [data_added] DATETIME NOT NULL DEFAULT getdate())
+    [created_date] DATETIME NOT NULL DEFAULT getdate(), 
+    [createtd_by] NVARCHAR(MAX) NOT NULL DEFAULT SUSER_NAME(), 
+    [last_modified_date] DATETIME NOT NULL DEFAULT getdate(), 
+    [last_modified_by] NVARCHAR(MAX) NOT NULL DEFAULT SUSER_NAME())
