@@ -44,9 +44,22 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.DataAdded)
+                entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added")
+                    .HasColumnName("created_date")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatetdBy)
+                    .HasColumnName("createtd_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("last_modified_date")
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
@@ -58,9 +71,22 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.DataAdded)
+                entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added")
+                    .HasColumnName("created_date")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatetdBy)
+                    .HasColumnName("createtd_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("last_modified_date")
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
@@ -76,9 +102,27 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.City).HasColumnName("city");
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatetdBy)
+                    .HasColumnName("createtd_by")
+                    .HasDefaultValueSql("(suser_name())");
+
                 entity.Property(e => e.Email).HasColumnName("email");
 
                 entity.Property(e => e.HouseNumber).HasColumnName("house_number");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("last_modified_date")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
@@ -121,7 +165,8 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.StartDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("start_date");
+                    .HasColumnName("start_date")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Orders)
@@ -210,9 +255,22 @@ namespace EShopPUA.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
-                entity.Property(e => e.DataAdded)
+                entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("data_added")
+                    .HasColumnName("created_date")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatetdBy)
+                    .HasColumnName("createtd_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasDefaultValueSql("(suser_name())");
+
+                entity.Property(e => e.LastModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("last_modified_date")
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasColumnName("name");
