@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model EShopPUA.Controllers.HomeViewModel
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,8 +29,12 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <!--<header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+   
+    <header>
+        
+        @{ await Html.RenderPartialAsync("_CategoriesMenu", Model.Categories); }
+        
+        <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Pretty</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -63,8 +68,8 @@
                     <partial name="_LoginPartial" />
                 </div>
             </div>
-        </nav>
-    </header>-->
+        </nav>-->
+    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
