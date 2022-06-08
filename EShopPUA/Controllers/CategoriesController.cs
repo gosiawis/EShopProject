@@ -26,11 +26,11 @@ namespace EShopPUA.Controllers
                           Problem("Entity set 'DatabaseEShopContext.Categories'  is null.");
         }
 
-        [System.Web.Mvc.ChildActionOnly]
-        public async Task<IActionResult> RenderMenu()
-        {
-            return PartialView("_CategoriesMenu", await _context.Categories.ToListAsync());
-        }
+        //[System.Web.Mvc.ChildActionOnly]
+        //public async Task<IActionResult> RenderMenu()
+        //{
+        //    return PartialView("_CategoriesMenu", await _context.Categories.ToListAsync());
+        //}
 
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)

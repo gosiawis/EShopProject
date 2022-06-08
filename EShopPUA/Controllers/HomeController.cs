@@ -20,7 +20,7 @@ namespace EShopPUA.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync() });
+            return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync() });
         }
 
         public IActionResult Privacy()
@@ -39,6 +39,7 @@ namespace EShopPUA.Controllers
     public class HomeViewModel
     {
         public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<Product> Products { get; set; }
 
     }
 }
