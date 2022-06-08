@@ -23,6 +23,11 @@ namespace EShopPUA.Controllers
             return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync() });
         }
 
+        public async Task<IActionResult> Shop()
+        {
+            return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync() });
+        }
+
         public IActionResult Privacy()
         {
             return View();
