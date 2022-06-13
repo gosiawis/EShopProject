@@ -7,12 +7,12 @@ using System.Diagnostics;
 namespace EShopPUA.Controllers
 {
     //[Authorize]
-    public class HomeController : Controller
+    public class ShopController : Controller
     {
         private readonly DatabaseEShopContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<ShopController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, DatabaseEShopContext context)
+        public ShopController(ILogger<ShopController> logger, DatabaseEShopContext context)
         {
             _logger = logger;
             _context = context;
@@ -20,7 +20,7 @@ namespace EShopPUA.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync() });
+            return View(new ShopViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync(), Brands = await _context.Brands.ToListAsync() });
         }
 
         public IActionResult Privacy()
@@ -36,10 +36,12 @@ namespace EShopPUA.Controllers
         }
     }
 
-    public class HomeViewModel
+    public class ShopViewModel
     {
         public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Product> Products { get; set; }
+
+        public IEnumerable<Brand> Brands { get; set; }
 
     }
 }

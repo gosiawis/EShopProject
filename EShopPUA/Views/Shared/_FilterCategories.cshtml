@@ -1,0 +1,21 @@
+﻿@model IEnumerable<EShopPUA.Models.Category>
+<!-- Category Start -->
+<div class="mb-5">
+    <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
+    <form>
+        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+            <input type="checkbox" class="custom-control-input" checked id="category-all">
+            <label class="custom-control-label" for="category-all">All</label>
+            <span class="badge border font-weight-normal">1000</span>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" checked id="category-@(item.Id)">
+                <label class="custom-control-label" for="category-@(item.Id)">@item.Name</label>
+                <span class="badge border font-weight-normal">246</span>
+            </div>
+        }
+    </form>
+</div>
+<!-- Category End -->
