@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-//using System.Drawing;
 
 namespace EShopPUA.Models
 {
@@ -39,5 +39,6 @@ namespace EShopPUA.Models
         public virtual Brand? Brand { get; set; } = null!;
         public virtual Category? Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+
     }
 }

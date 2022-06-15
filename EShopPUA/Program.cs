@@ -27,7 +27,15 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AuthorizeFilter(policy));*/
 }).AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
-    //.AddMicrosoftIdentityUI();
+//.AddMicrosoftIdentityUI();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -46,6 +54,8 @@ app.UseRouting();
 
 //app.UseAuthentication();
 //app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
