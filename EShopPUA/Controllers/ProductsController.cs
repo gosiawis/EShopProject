@@ -21,8 +21,19 @@ namespace EShopPUA.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var databaseEShopContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
+            var databaseEShopContext = _context.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Category);
             return View(await databaseEShopContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> CountCategories(int? categoryId)
+        {
+            var product = await _context.Products
+                .Include(p => p.BrandId == categoryId)
+                .ToListAsync();
+            var count = product.Count();
+            return View(count);
         }
 
         // GET: Products/Details/5

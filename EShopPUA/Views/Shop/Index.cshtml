@@ -1,4 +1,4 @@
-﻿@model EShopPUA.Controllers.ShopViewModel
+﻿@model EShopPUA.Controllers.ShopController.ShopViewModel
 
 @{
     ViewData["Title"] = "Shop Page";
@@ -53,7 +53,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
                             <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                            <a href="cart.html" class="nav-item nav-link">Shopping Cart</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Carts" asp-action="Index">Shopping Cart</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
@@ -83,53 +83,67 @@
         <div class="row px-xl-5">
             <!-- Shop Sidebar Start -->
             <div class="col-lg-3 col-md-12">
-                <!-- Price Start -->
-                <div class="border-bottom mb-4 pb-4">
-                    <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
-                    <form>
+                <form asp-controller="Shop" asp-action="Index">
+                    <!-- Price Start -->
+                    <div class="border-bottom mb-4 pb-4">
+                        <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
+
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
+                            <input type="checkbox" class="custom-control-input" checked id="price-all" name="isAllPricesSelectedString">
                             <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.TotalProducts</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">$0 - $100</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <input type="checkbox" class="custom-control-input" id="price-1" name="selectedPrices">
+                            <label class="custom-control-label" for="price-1">$0 - $20</label>
+                            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.PriceProducts(0,20)</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
+                            <input type="checkbox" class="custom-control-input" id="price-3" name="selectedPrices">
+                            <label class="custom-control-label" for="price-3">$20 - $30</label>
+                            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.PriceProducts(20,30)</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
+                            <input type="checkbox" class="custom-control-input" id="price-4" name="selectedPrices">
+                            <label class="custom-control-label" for="price-4">$30 - $40</label>
+                            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.PriceProducts(30,40)</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">$400 - $500</label>
-                            <span class="badge border font-weight-normal">168</span>
+                            <input type="checkbox" class="custom-control-input" id="price-5" name="selectedPrices">
+                            <label class="custom-control-label" for="price-5">$40 - $50</label>
+                            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.PriceProducts(40,50)</span>
                         </div>
-                    </form>
-                </div>
-                <!-- Price End -->
-                <!-- Brands Filter Start -->
-                @{
-                    await Html.RenderPartialAsync("_FilterBrands", Model.Brands);
-                }
-                <!-- Brands Filter End -->
-                <!-- Categories Filter Start -->
-                @{
-                    await Html.RenderPartialAsync("_FilterCategories", Model.Categories);
-                }
-                <!-- Categories Filter End -->
+
+                    </div>
+                    <!-- Price End -->
+                    <!-- Brand Start -->
+                    <div class="border-bottom mb-4 pb-4">
+                        <h5 class="font-weight-semi-bold mb-4">Filter by brand</h5>
+                        @foreach (var item in Model.Brands)
+                        {
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                <input type="checkbox" class="custom-control-input" checked id="brand-@(item.Id)" name="selectedBrands" value="@(item.Id)">
+                                <label class="custom-control-label" for="brand-@(item.Id)">@item.Name</label>
+                                <span class="badge border font-weight-normal text-dark">@Model.CountProducts.BrandProducts(item.Id)</span>
+                            </div>
+                        }
+                    </div>
+                    <!-- Brand End -->
+                    <!-- Category Start -->
+                    <div class="mb-5">
+                        <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
+                        @foreach (var item in Model.Categories)
+                        {
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                <input type="checkbox" class="custom-control-input" checked id="category-@(item.Id)" name="selectedCategories" value="@(item.Id)">
+                                <label class="custom-control-label" for="category-@(item.Id)">@item.Name</label>
+                                <span class="badge border font-weight-normal text-dark">@Model.CountProducts.CategoryProducts(item.Id)</span>
+                            </div>
+                        }
+                    </div>
+                    <!-- Category End -->
+                    <input type="submit" value="Filter"/>
+                </form>
             </div>
             <!-- Shop Sidebar End -->
             @{

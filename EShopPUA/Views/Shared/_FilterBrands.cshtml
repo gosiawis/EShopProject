@@ -1,22 +1,15 @@
-﻿@model IEnumerable<EShopPUA.Models.Brand>
+﻿@model EShopPUA.Controllers.ShopController.ShopViewModel
+
 <!-- Brand Start -->
 <div class="border-bottom mb-4 pb-4">
     <h5 class="font-weight-semi-bold mb-4">Filter by brand</h5>
-    <form asp-controller="Shop" asp-action="Index">
+    @foreach (var item in Model.Brands)
+    {
         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-            <input type="checkbox" class="custom-control-input" checked id="brand-all" name="isAllSelectedString">
-            <label class="custom-control-label" for="brand-all">All</label>
-            <span class="badge border font-weight-normal">1000</span>
+            <input type="checkbox" class="custom-control-input" checked id="brand-@(item.Id)" name="selectedBrands" value="@(item.Id)">
+            <label class="custom-control-label" for="brand-@(item.Id)">@item.Name</label>
+            <span class="badge border font-weight-normal text-dark">@Model.CountProducts.BrandProducts(item.Id)</span>
         </div>
-        @foreach (var item in Model)
-        {
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" checked id="brand-@(item.Id)" name="selectedBrands" value="@(item.Id)">
-                <label class="custom-control-label" for="brand-@(item.Id)">@item.Name</label>
-                <span class="badge border font-weight-normal">246</span>
-            </div>
-        }
-        <input type="submit" value="Submit" />
-    </form>
+    }
 </div>
 <!-- Brand End -->

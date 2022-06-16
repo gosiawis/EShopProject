@@ -19,10 +19,10 @@ namespace EShopPUA.Models
         public DateTime? EndDate { get; set; }
         public double Price { get; set; }
 
-        public virtual Client? Client { get; set; } = null!;
-        public virtual OrderStatus? OrderStatus { get; set; } = null!;
-        public virtual PaymentMethod? PaymentMethod { get; set; } = null!;
-        public virtual PaymentStatus? PaymentStatus { get; set; } = null!;
+        public virtual Client Client { get; set; } = null!;
+        public virtual OrderStatus OrderStatus { get; set; } = null!;
+        public virtual PaymentMethod PaymentMethod { get; set; } = null!;
+        public virtual PaymentStatus PaymentStatus { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

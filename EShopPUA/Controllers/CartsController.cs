@@ -9,85 +9,90 @@ using EShopPUA.Models;
 
 namespace EShopPUA.Controllers
 {
-    public class BrandsController : Controller
+    public class CartsController : Controller
     {
         private readonly DatabaseEShopContext _context;
 
-        public BrandsController(DatabaseEShopContext context)
+        public CartsController(DatabaseEShopContext context)
         {
             _context = context;
         }
 
-        // GET: Brands
+        // GET: Carts
         public async Task<IActionResult> Index()
-        { 
-            return View(await _context.Brands.ToListAsync());
+        {
+            var databaseEShopContext = _context.Carts.Include(c => c.Product);
+            return View(await databaseEShopContext.ToListAsync());
         }
 
-        // GET: Brands/Details/5
+        // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Brands == null)
+            if (id == null || _context.Carts == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var cart = await _context.Carts
+                .Include(c => c.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(cart);
         }
 
-        // GET: Brands/Create
+        // GET: Carts/Create
         public IActionResult Create()
         {
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id");
             return View();
         }
 
-        // POST: Brands/Create
+        // POST: Carts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Brand brand)
+        public async Task<IActionResult> Create([Bind("Id,ProductId,ProductQuantity")] Cart cart)
         {
-            //if (ModelState.IsValid)
-            //{
-            _context.Add(brand);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            //}
-            return View(brand);
+            if (ModelState.IsValid)
+            {
+                _context.Add(cart);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", cart.ProductId);
+            return View(cart);
         }
 
-        // GET: Brands/Edit/5
+        // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Brands == null)
+            if (id == null || _context.Carts == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
+            var cart = await _context.Carts.FindAsync(id);
+            if (cart == null)
             {
                 return NotFound();
             }
-            return View(brand);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", cart.ProductId);
+            return View(cart);
         }
 
-        // POST: Brands/Edit/5
+        // POST: Carts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedDate,CreatetdBy,LastModifiedDate,LastModifiedBy")] Brand brand)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,ProductQuantity")] Cart cart)
         {
-            if (id != brand.Id)
+            if (id != cart.Id)
             {
                 return NotFound();
             }
@@ -96,12 +101,12 @@ namespace EShopPUA.Controllers
             {
                 try
                 {
-                    _context.Update(brand);
+                    _context.Update(cart);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BrandExists(brand.Id))
+                    if (!CartExists(cart.Id))
                     {
                         return NotFound();
                     }
@@ -112,49 +117,51 @@ namespace EShopPUA.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(brand);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", cart.ProductId);
+            return View(cart);
         }
 
-        // GET: Brands/Delete/5
+        // GET: Carts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Brands == null)
+            if (id == null || _context.Carts == null)
             {
                 return NotFound();
             }
 
-            var brand = await _context.Brands
+            var cart = await _context.Carts
+                .Include(c => c.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(brand);
+            return View(cart);
         }
 
-        // POST: Brands/Delete/5
+        // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Brands == null)
+            if (_context.Carts == null)
             {
-                return Problem("Entity set 'DatabaseEShopContext.Brands'  is null.");
+                return Problem("Entity set 'DatabaseEShopContext.Cart'  is null.");
             }
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand != null)
+            var cart = await _context.Carts.FindAsync(id);
+            if (cart != null)
             {
-                _context.Brands.Remove(brand);
+                _context.Carts.Remove(cart);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BrandExists(int id)
+        private bool CartExists(int id)
         {
-            return (_context.Brands?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

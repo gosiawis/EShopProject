@@ -20,14 +20,14 @@ namespace EShopPUA.Controllers
         public async Task<IActionResult> Index(ShopFilters filters)
         {
             IEnumerable<Product> products;
-            if (filters.IsAllSelected || filters.SelectedBrands is null)
+            if (filters.SelectedBrands is null || filters.SelectedCategories is null)
             {
                 products = await _context.Products.ToListAsync();
             }
             else
             {
                 products = await _context.Products
-                    .Where(p => filters.SelectedBrands.Contains(p.BrandId))
+                    .Where(p => filters.SelectedBrands.Contains(p.BrandId) && filters.SelectedCategories.Contains(p.CategoryId))
                     .ToListAsync();
             }
             return View(
@@ -35,16 +35,61 @@ namespace EShopPUA.Controllers
                 {
                     Categories = await _context.Categories.ToListAsync(),
                     Products = products,
-                    Brands = await _context.Brands.ToListAsync()
+                    Brands = await _context.Brands.ToListAsync(),
+                    CountProducts = new CountProducts { Products = await _context.Products.ToListAsync()}
                 }
             );
         }
 
         public class ShopFilters
         {
-            public string? IsAllSelectedString { get; set; }
-            public bool IsAllSelected => IsAllSelectedString == "on" ? true : false;
             public IEnumerable<int>? SelectedBrands { get; set; }
+            public IEnumerable<int>? SelectedCategories { get; set; }
+            public IEnumerable<int>? SelectedPrices { get; set; }
+
+        }
+
+        public class BrandViewModel
+        {
+            
+            public IEnumerable<Brand>? Brands { get; set; }
+
+        }
+
+        public class ShopViewModel
+        {
+            public IEnumerable<Category> Categories { get; set; }
+            public IEnumerable<Product> Products { get; set; }
+            public IEnumerable<Brand> Brands { get; set; }
+
+            public CountProducts? CountProducts { get; set; }
+        }
+
+        public class CountProducts
+        {
+            public IEnumerable<Product>? Products { get; set; }
+            public int TotalProducts
+            {
+                get
+                {
+                    return Products.Count();
+                }
+            }
+            public int BrandProducts(int? id)
+            {
+                return Products.Count(p => p.BrandId == id);
+            }
+
+            public int CategoryProducts(int? id)
+            {
+                return Products.Count(p => p.CategoryId == id);
+            }
+
+            public int PriceProducts(int? lowerBound, int? upperBound)
+            {
+                return Products.Count(p => p.Price >= lowerBound && p.Price <= upperBound);
+            }
+
         }
 
         public IActionResult Privacy()
@@ -60,12 +105,5 @@ namespace EShopPUA.Controllers
         }
     }
 
-    public class ShopViewModel
-    {
-        public IEnumerable<Category> Categories { get; set; }
-        public IEnumerable<Product> Products { get; set; }
 
-        public IEnumerable<Brand> Brands { get; set; }
-
-    }
 }
