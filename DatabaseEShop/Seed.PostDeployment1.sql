@@ -8,7 +8,7 @@ Post-Deployment Script Template
  Example:      :setvar TableName MyTable							
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
-*/
+
 
 INSERT INTO brands VALUES ('Chanel', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Dior', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Lancome', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Fenty Beauty', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Rare Beauty', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Huda Beauty', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME());
 INSERT INTO categories VALUES ('Lips',GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Eyes', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Face', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Brows', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Body', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME()), ('Hair', GetDate(), SUSER_NAME(), GetDate(), SUSER_NAME());
@@ -21,3 +21,4 @@ INSERT INTO clients VALUES ('Anna', 'Kowalska', 'annak@gmail.com', 1, 'Towny', '
 INSERT INTO orders VALUES (1, 3, 2, 1, GetDate(), GetDate(), 0.00);
 INSERT INTO order_items VALUES (1, 2, 1), (1, 4, 1);
 
+*/
