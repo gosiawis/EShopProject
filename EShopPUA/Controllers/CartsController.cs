@@ -19,10 +19,30 @@ namespace EShopPUA.Controllers
         }
 
         // GET: Carts
+        //public async Task<IActionResult> Index()
+        //{
+        //    var databaseEShopContext = _context.Carts.Include(c => c.Product);
+        //    return View(await databaseEShopContext.ToListAsync());
+        //}
+
         public async Task<IActionResult> Index()
+        { 
+            return View(
+                new CartViewModel
+                {
+                    Categories = await _context.Categories.ToListAsync(),
+                    Products = await _context.Products.ToListAsync(),
+                    Brands = await _context.Brands.ToListAsync()
+                }
+            );
+        }
+
+
+        public class CartViewModel
         {
-            var databaseEShopContext = _context.Carts.Include(c => c.Product);
-            return View(await databaseEShopContext.ToListAsync());
+            public IEnumerable<Category> Categories { get; set; }
+            public IEnumerable<Product> Products { get; set; }
+            public IEnumerable<Brand> Brands { get; set; }
         }
 
         // GET: Carts/Details/5

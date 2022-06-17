@@ -49,12 +49,6 @@ namespace EShopPUA.Controllers
 
         }
 
-        public class BrandViewModel
-        {
-            
-            public IEnumerable<Brand>? Brands { get; set; }
-
-        }
 
         public class ShopViewModel
         {
@@ -90,6 +84,30 @@ namespace EShopPUA.Controllers
                 return Products.Count(p => p.Price >= lowerBound && p.Price <= upperBound);
             }
 
+        }
+
+        public async Task<IActionResult> Cart(ShopFilters filters)
+        {
+            IEnumerable<Product> products;
+            if (filters.SelectedBrands is null || filters.SelectedCategories is null)
+            {
+                products = await _context.Products.ToListAsync();
+            }
+            else
+            {
+                products = await _context.Products
+                    .Where(p => filters.SelectedBrands.Contains(p.BrandId) && filters.SelectedCategories.Contains(p.CategoryId))
+                    .ToListAsync();
+            }
+            return View(
+                new ShopViewModel
+                {
+                    Categories = await _context.Categories.ToListAsync(),
+                    Products = products,
+                    Brands = await _context.Brands.ToListAsync(),
+                    CountProducts = new CountProducts { Products = await _context.Products.ToListAsync() }
+                }
+            );
         }
 
         public IActionResult Privacy()
