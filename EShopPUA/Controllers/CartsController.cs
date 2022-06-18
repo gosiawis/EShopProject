@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShopPUA.Models;
+using System.Data;
+using EShopPUA.Helpers;
 
 namespace EShopPUA.Controllers
 {
@@ -26,23 +28,81 @@ namespace EShopPUA.Controllers
         //}
 
         public async Task<IActionResult> Index()
-        { 
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            ViewBag.cart = cart;
+            ViewBag.total = cart.Sum(item => item.Product.Price * item.ProductQuantity + 10);
             return View(
                 new CartViewModel
                 {
                     Categories = await _context.Categories.ToListAsync(),
-                    Products = await _context.Products.ToListAsync(),
-                    Brands = await _context.Brands.ToListAsync()
+                    //Products = await _context.Products.ToListAsync(),
+                    //Brands = await _context.Brands.ToListAsync()
                 }
             );
         }
 
-
         public class CartViewModel
         {
             public IEnumerable<Category> Categories { get; set; }
-            public IEnumerable<Product> Products { get; set; }
-            public IEnumerable<Brand> Brands { get; set; }
+            //public IEnumerable<Product> Products { get; set; }
+            //public IEnumerable<Brand> Brands { get; set; }
+        }
+
+        public class CartContentModel
+        {
+            public Product Product { get; set; }
+            public int ProductQuantity { get; set; }
+        }
+
+        [Route("buy/{productId}")]
+        public async Task<IActionResult> AddToCartAsync(int productId)
+        {
+            CartContentModel cartContentModel = new CartContentModel();
+            if (SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart") == null)
+            {
+                List<CartContentModel> cart = new List<CartContentModel>();
+                cart.Add(new CartContentModel { Product = await _context.Products.SingleAsync(p => p.Id == productId), ProductQuantity = 1 });
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            }
+            else
+            {
+                List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+                int index = isExist(productId);
+                if (index != -1)
+                {
+                    cart[index].ProductQuantity++;
+                }
+                else
+                {
+                    cart.Add(new CartContentModel { Product = await _context.Products.SingleAsync(p => p.Id == productId), ProductQuantity = 1 });
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [Route("remove/{id}")]
+        public IActionResult Remove(int id)
+        {
+            List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            int index = isExist(id);
+            cart.RemoveAt(index);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            return RedirectToAction("Index");
+        }
+
+        private int isExist(int id)
+        {
+            List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            for (int i = 0; i < cart.Count; i++)
+            {
+                if (cart[i].Product.Id.Equals(id))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         // GET: Carts/Details/5
@@ -174,14 +234,14 @@ namespace EShopPUA.Controllers
             {
                 _context.Carts.Remove(cart);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CartExists(int id)
         {
-          return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
