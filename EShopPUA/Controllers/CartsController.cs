@@ -29,13 +29,16 @@ namespace EShopPUA.Controllers
 
         public async Task<IActionResult> Index()
         {
+
             var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
-            ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Product.Price * item.ProductQuantity + 10);
+            //ViewBag.cart = cart;
+            //ViewBag.total = cart.Sum(item => item.Product.Price * item.ProductQuantity + 10);
             return View(
                 new CartViewModel
                 {
                     Categories = await _context.Categories.ToListAsync(),
+                    CartContentModels = cart,
+                    CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity + 10)
                     //Products = await _context.Products.ToListAsync(),
                     //Brands = await _context.Brands.ToListAsync()
                 }
@@ -45,6 +48,9 @@ namespace EShopPUA.Controllers
         public class CartViewModel
         {
             public IEnumerable<Category> Categories { get; set; }
+            public IEnumerable<CartContentModel> CartContentModels { get; set; }
+
+            public int CartTotal { get; set; }
             //public IEnumerable<Product> Products { get; set; }
             //public IEnumerable<Brand> Brands { get; set; }
         }
@@ -55,8 +61,7 @@ namespace EShopPUA.Controllers
             public int ProductQuantity { get; set; }
         }
 
-        [Route("buy/{productId}")]
-        public async Task<IActionResult> AddToCartAsync(int productId)
+        public async Task<IActionResult> AddToCart(int productId)
         {
             CartContentModel cartContentModel = new CartContentModel();
             if (SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart") == null)
@@ -82,11 +87,11 @@ namespace EShopPUA.Controllers
             return RedirectToAction("Index");
         }
 
-        [Route("remove/{id}")]
-        public IActionResult Remove(int id)
+        [Route("remove/{productId}")]
+        public IActionResult RemoveFromCart(int productId)
         {
             List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
-            int index = isExist(id);
+            int index = isExist(productId);
             cart.RemoveAt(index);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             return RedirectToAction("Index");
