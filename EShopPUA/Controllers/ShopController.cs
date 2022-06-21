@@ -17,12 +17,26 @@ namespace EShopPUA.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(ShopFilters filters)
+        public async Task<IActionResult> Index(ShopFilters filters, NameFilter nameFilter)
         {
             IEnumerable<Product> products;
-            if (filters.SelectedBrands is null || filters.SelectedCategories is null)
+            if (nameFilter == null)
             {
-                products = await _context.Products.ToListAsync();
+
+            }
+            if (filters.SelectedBrands is null || filters.SelectedCategories is null )
+            {
+                if (nameFilter.ProductName is null)
+                {
+                    products = await _context.Products.ToListAsync();
+                }
+                else
+                {
+                    products = await _context.Products
+                        .Where(p => p.Name.Contains(nameFilter.ProductName))
+                        .ToListAsync();
+                }
+                
             }
             else
             {
@@ -64,6 +78,11 @@ namespace EShopPUA.Controllers
             public IEnumerable<int>? SelectedCategories { get; set; }
             public IEnumerable<int>? SelectedPrices { get; set; }
 
+        }
+
+        public class NameFilter
+        {
+            public string? ProductName { get; set; }
         }
 
         public class ShopViewModel
