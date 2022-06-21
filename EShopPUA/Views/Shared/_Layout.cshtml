@@ -76,11 +76,11 @@
         <div class="col-lg-6 col-6 text-left">
             <form action="">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for products">
+                    <input type="text" class="form-control" placeholder="Search for products" name="productName">
                     <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
+                        <button asp-controller="Shop" asp-action="Index" class="input-group-text bg-transparent text-primary" type="submit">
                             <i class="fa fa-search"></i>
-                        </span>
+                        </button>
                     </div>
                 </div>
             </form>
