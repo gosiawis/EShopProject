@@ -69,7 +69,6 @@
     <Build Include="order_items.sql" />
     <Build Include="payment_statuses.sql" />
     <Build Include="payment_methods.sql" />
-    <Build Include="carts.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DatabaseEShop.refactorlog" />
