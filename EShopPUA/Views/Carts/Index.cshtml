@@ -1,4 +1,5 @@
 ﻿@model EShopPUA.Controllers.CartsController.CartViewModel
+@using static EShopPUA.Controllers.CartsController
 
 @{
     ViewData["Title"] = "Cart Page";
@@ -54,7 +55,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
                             <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Carts" asp-action="AddToCart" asp-route-productId="0">Shopping Cart</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Carts" asp-action="Index">Shopping Cart</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
@@ -73,8 +74,7 @@
             <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
             <div class="d-inline-flex">
                 <p class="m-0"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></p>
-
-                <p class="m-0"><a class="nav-link text-dark" asp-area="" asp-controller="Carts" asp-action="AddToCart" asp-route-productId="0">Shopping Cart</a></p>
+                <p class="m-0"><a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Index">Shop</a></p>
             </div>
         </div>
     </div>
@@ -102,20 +102,27 @@
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-minus">
+                                            <a asp-controller="Carts" asp-action="DecreaseQuantity" asp-route-productId="@item.Product.Id" class="btn btn-sm btn-primary btn-minus">
                                                 <i class="fa fa-minus"></i>
-                                            </button>
+                                            </a>
                                         </div>
                                         <input type="text" class="form-control form-control-sm bg-secondary text-center" value="@item.ProductQuantity">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-plus">
+
+                                            <a asp-controller="Carts" asp-action="AddToCart" asp-route-productId="@item.Product.Id" class="btn btn-sm btn-primary btn-plus">
                                                 <i class="fa fa-plus"></i>
-                                            </button>
+                                            </a>
+
                                         </div>
                                     </div>
                                 </td>
                                 <td class="align-middle">$@(item.Product.Price*item.ProductQuantity)</td>
-                                <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+
+                                <td class="align-middle">
+                                    <a asp-controller="Carts" asp-action="RemoveFromCart" asp-route-productId="@item.Product.Id" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
                             </tr>
                         }
 

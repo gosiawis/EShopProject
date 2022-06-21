@@ -36,10 +36,29 @@ namespace EShopPUA.Controllers
                     Categories = await _context.Categories.ToListAsync(),
                     Products = products,
                     Brands = await _context.Brands.ToListAsync(),
-                    CountProducts = new CountProducts { Products = await _context.Products.ToListAsync()}
+                    CountProducts = new CountProducts { Products = await _context.Products.ToListAsync() }
                 }
             );
         }
+
+        public async Task<IActionResult> CategoryView(int categoryId)
+        {
+            IEnumerable<Product> products;
+            products = await _context.Products
+                    .Where(p => p.CategoryId == categoryId)
+                    .ToListAsync();
+            return View("Index", 
+                new ShopViewModel
+                {
+                    Categories = await _context.Categories.ToListAsync(),
+                    Products = products,
+                    Brands = await _context.Brands.ToListAsync(),
+                    CountProducts = new CountProducts { Products = await _context.Products.ToListAsync() }
+                }
+            );
+        }
+
+      
 
         public class ShopFilters
         {

@@ -83,16 +83,16 @@ fieldset:disabled a.btn {
 .btn-link {
   font-weight: $font-weight-normal;
   color: $link-color;
-  text-decoration: $link-decoration;
+  text-decoration: none;
 
   @include hover() {
     color: $link-hover-color;
-    text-decoration: $link-hover-decoration;
+    text-decoration: none;
   }
 
   &:focus,
   &.focus {
-    text-decoration: $link-hover-decoration;
+    text-decoration: none;
   }
 
   &:disabled,

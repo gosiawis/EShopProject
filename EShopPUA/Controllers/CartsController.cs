@@ -31,16 +31,12 @@ namespace EShopPUA.Controllers
         {
 
             var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
-            //ViewBag.cart = cart;
-            //ViewBag.total = cart.Sum(item => item.Product.Price * item.ProductQuantity + 10);
             return View(
                 new CartViewModel
                 {
                     Categories = await _context.Categories.ToListAsync(),
                     CartContentModels = cart,
-                    CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity + 10)
-                    //Products = await _context.Products.ToListAsync(),
-                    //Brands = await _context.Brands.ToListAsync()
+                    CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)
                 }
             );
         }
@@ -87,7 +83,23 @@ namespace EShopPUA.Controllers
             return RedirectToAction("Index");
         }
 
-        [Route("remove/{productId}")]
+        public async Task<ActionResult> DecreaseQuantity(int productId)
+        {
+            List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            int index = isExist(productId);
+            if (cart[index].ProductQuantity == 1)
+            {
+                cart.RemoveAt(index);
+            }
+            else
+            {
+                cart[index].ProductQuantity--;
+            }
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            return RedirectToAction("Index");
+        }
+
+
         public IActionResult RemoveFromCart(int productId)
         {
             List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
@@ -97,12 +109,12 @@ namespace EShopPUA.Controllers
             return RedirectToAction("Index");
         }
 
-        private int isExist(int id)
+        private int isExist(int productId)
         {
             List<CartContentModel> cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
-                if (cart[i].Product.Id.Equals(id))
+                if (cart[i].Product.Id.Equals(productId))
                 {
                     return i;
                 }
