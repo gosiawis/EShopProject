@@ -7,9 +7,9 @@
         {
             <div class="col-lg-4 col-md-6 pb-1">
                 <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/categories/@(item.Name).jpg" alt="@item.Name">
+                    <p class="text-right"> </p>
+                    <a asp-controller="Shop" asp-action="CategoryView" asp-route-categoryId="@item.Id" class="cat-img position-relative overflow-hidden mb-3">
+                        <img class="img-fluid" src="~/img/categories/@(item.Name).jpg" alt="@item.Name">
                     </a>
                     <h5 class="font-weight-semi-bold m-0">@item.Name</h5>
                 </div>

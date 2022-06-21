@@ -1,0 +1,15 @@
+﻿@model IEnumerable<EShopPUA.Models.PaymentMethod>
+
+<div class="card-body">
+
+    @foreach (var item in Model)
+    {
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="payment" id="@item.Id">
+                <label class="custom-control-label" for="@item.Id">@item.Name</label>
+            </div>
+        </div>
+    }
+
+</div>

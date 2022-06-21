@@ -7,7 +7,6 @@ namespace EShopPUA.Models
     {
         public Product()
         {
-            Carts = new HashSet<Cart>();
             OrderItems = new HashSet<OrderItem>();
         }
 
@@ -17,7 +16,6 @@ namespace EShopPUA.Models
         public int CategoryId { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
-        public byte[]? Picture { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatetdBy { get; set; } = null!;
         public DateTime LastModifiedDate { get; set; }
@@ -25,7 +23,6 @@ namespace EShopPUA.Models
 
         public virtual Brand Brand { get; set; } = null!;
         public virtual Category Category { get; set; } = null!;
-        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

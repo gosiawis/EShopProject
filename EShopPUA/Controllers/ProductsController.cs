@@ -56,13 +56,6 @@ namespace EShopPUA.Controllers
             return View(product);
         }
 
-        //[System.Web.Mvc.ChildActionOnly]
-        //public async Task<IActionResult> CountCategories()
-        //{
-        //    ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-        //    return PartialView("_CategoriesMenu", await _context.Categories.ToListAsync());
-        //}
-
         // GET: Products/Create
         public IActionResult Create()
         {
