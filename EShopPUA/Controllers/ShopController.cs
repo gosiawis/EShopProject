@@ -20,10 +20,6 @@ namespace EShopPUA.Controllers
         public async Task<IActionResult> Index(ShopFilters filters, NameFilter nameFilter)
         {
             IEnumerable<Product> products;
-            if (nameFilter == null)
-            {
-
-            }
             if (filters.SelectedBrands is null || filters.SelectedCategories is null )
             {
                 if (nameFilter.ProductName is null)

@@ -36,6 +36,7 @@ namespace EShopPUA.Controllers
                     Categories = await _context.Categories.ToListAsync(),
                     CartContentModels = cart,
                     PaymentMethods = await _context.PaymentMethods.ToListAsync(),
+                    Voivodeships = await _context.Voivodeships.ToListAsync(),
                     CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)
                 }
             );
@@ -50,9 +51,129 @@ namespace EShopPUA.Controllers
                     Categories = await _context.Categories.ToListAsync(),
                     CartContentModels = cart,
                     PaymentMethods = await _context.PaymentMethods.ToListAsync(),
+                    Voivodeships = await _context.Voivodeships.ToListAsync(),
                     CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)
                 }
             );
+        }
+
+        public async Task<IActionResult> OrderPlaced(ClientDataModel clientDataModel)
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            return View(
+                new OrderViewModel
+                {
+                    Categories = await _context.Categories.ToListAsync(),
+                    CartContentModels = cart,
+                    PaymentMethods = await _context.PaymentMethods.ToListAsync(),
+                    Voivodeships = await _context.Voivodeships.ToListAsync(),
+                    CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity),
+                    ClientDataModel = clientDataModel
+                }
+            );
+        }
+
+        
+        public async Task<IActionResult> CreateOrder(ClientDataModel clientDataModel)
+        {
+            IEnumerable<Voivodeship> voivodeships = await _context.Voivodeships.ToListAsync();
+            List<Client> clients = await _context.Clients.ToListAsync();
+            IEnumerable<Order> orders = await _context.Orders.ToListAsync();
+            var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            int clientId = 0;
+            for(int i = 0; i < clients.Count; i++)
+            {
+                if (clients[i].Email.Equals(clientDataModel.ClientEmail))
+                {
+                    clientId = i;
+                }
+            }
+            if (clientId == 0)
+            {
+                Client client = new Client
+                {
+                    Name = clientDataModel.ClientName,
+                    Surname = clientDataModel.ClientSurname,
+                    Email = clientDataModel.ClientEmail,
+                    VoivodeshipId = voivodeships.Single(v => v.Name == clientDataModel.ClientVoivodeship).Id,
+                    City = clientDataModel.ClientCity,
+                    Street = clientDataModel.ClientStreet,
+                    HouseNumber = (int)clientDataModel.ClientHouseNumber,
+                    ApartmentNumber = clientDataModel.ClientApartmentNumber,
+                    ZipCode = clientDataModel.ClientZipCode,
+                    CreatedDate = DateTime.Now,
+                    CreatetdBy = System.Security.Principal.WindowsIdentity.GetCurrent().Name,
+                    LastModifiedDate = DateTime.Now,
+                    LastModifiedBy = System.Security.Principal.WindowsIdentity.GetCurrent().Name
+                };
+
+                _context.Add(client);
+                await _context.SaveChangesAsync();
+            }
+            for (int i = 0; i < clients.Count; i++)
+            {
+                if (clients[i].Email.Equals(clientDataModel.ClientEmail))
+                {
+                    clientId = i;
+                }
+            }
+            Order order = new Order
+            {
+                ClientId = clientId,
+                OrderStatusId = 1,
+                PaymentStatusId = 1,
+                PaymentMethodId = (int)clientDataModel.PaymentId,
+                StartDate = DateTime.Now,
+                EndDate = null,
+                Price = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)
+            };
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+            int orderId = orders.Single(o => o.Price == (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)).Id;
+            foreach (var item in cart)
+            {
+                OrderItem orderItem = new OrderItem
+                {
+                    OrderId = orderId,
+                    ProductId = item.Product.Id,
+                    ProductQuantity = item.ProductQuantity
+                };
+                _context.Add(orderItem);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("OrderPlaced");
+        }
+
+
+
+        public class ClientDataModel
+        {
+            public string? ClientName { get; set; }
+            public string? ClientSurname { get; set; }
+            public string? ClientEmail { get; set; }
+            public string? ClientPhone { get; set; }
+            public string? ClientStreet { get; set; }
+            public int? ClientHouseNumber { get; set; }
+            public int? ClientApartmentNumber { get; set; } = null;
+
+            public string? ClientCity { get; set; }
+            public string? ClientZipCode { get; set; }
+            public string? ClientVoivodeship { get; set; }
+            public int? PaymentId { get; set; }
+        }
+
+        public class OrderViewModel
+        {
+            public IEnumerable<Category> Categories { get; set; }
+            public IEnumerable<CartContentModel> CartContentModels { get; set; }
+
+            public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
+            public IEnumerable<Voivodeship> Voivodeships { get; set; }
+
+            public int CartTotal { get; set; }
+
+            public ClientDataModel ClientDataModel { get; set; }
         }
 
         public class CartViewModel
@@ -61,6 +182,7 @@ namespace EShopPUA.Controllers
             public IEnumerable<CartContentModel> CartContentModels { get; set; }
 
             public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
+            public IEnumerable<Voivodeship> Voivodeships { get; set; }
 
             public int CartTotal { get; set; }
             //public IEnumerable<Product> Products { get; set; }
@@ -146,7 +268,6 @@ namespace EShopPUA.Controllers
 
         public async Task<IActionResult> ShowCheckout()
         {
-            CartContentModel cartContentModel = new CartContentModel();
             if (SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart") == null)
             {
                 List<CartContentModel> cart = new List<CartContentModel>();

@@ -10,7 +10,7 @@
         <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
             @foreach (var item in Model)
             {
-                <a href="" class="nav-item nav-link">@item.Name</a>
+                <a asp-controller="Shop" asp-action="CategoryView" asp-route-categoryId="@item.Id" class="nav-item nav-link">@item.Name</a>
             }
         </div>
     </nav>
