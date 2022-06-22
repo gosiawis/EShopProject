@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace EShopPUA.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly DatabaseEShopContext _context;
@@ -17,10 +17,19 @@ namespace EShopPUA.Controllers
             _logger = logger;
             _context = context;
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(new HomeViewModel { Categories = await _context.Categories.ToListAsync(), Products = await _context.Products.ToListAsync() });
+        }
+
+        public async Task<IActionResult> Login()
+        {
+            return View("Index", new HomeViewModel 
+            { 
+                Categories = await _context.Categories.ToListAsync(), 
+                Products = await _context.Products.ToListAsync() 
+            });
         }
 
         public IActionResult Privacy()
@@ -28,7 +37,7 @@ namespace EShopPUA.Controllers
             return View();
         }
 
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
