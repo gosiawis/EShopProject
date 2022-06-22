@@ -49,6 +49,8 @@ namespace EShopPUA.Controllers
             public int CartTotal { get; set; }
 
             public ClientDataModel ClientDataModel { get; set; }
+
+            public string PaymentMethodName { get; set; }
         }
 
         public class CartViewModel
@@ -199,15 +201,18 @@ namespace EShopPUA.Controllers
         public async Task<IActionResult> OrderPlaced(ClientDataModel clientDataModel)
         {
             var cart = SessionHelper.GetObjectFromJson<List<CartContentModel>>(HttpContext.Session, "cart");
+            var pm = await _context.PaymentMethods.ToListAsync();
+            var pmn = pm.Single(p => p.Id == clientDataModel.PaymentId).Name;
             return View(
                 new OrderViewModel
                 {
                     Categories = await _context.Categories.ToListAsync(),
                     CartContentModels = cart,
-                    PaymentMethods = await _context.PaymentMethods.ToListAsync(),
+                    PaymentMethods = pm,
                     Voivodeships = await _context.Voivodeships.ToListAsync(),
                     CartTotal = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity),
-                    ClientDataModel = clientDataModel
+                    ClientDataModel = clientDataModel,
+                    PaymentMethodName = pmn
                 }
             );
         }
@@ -232,16 +237,12 @@ namespace EShopPUA.Controllers
                     HouseNumber = (int)clientDataModel.ClientHouseNumber,
                     ApartmentNumber = clientDataModel.ClientApartmentNumber,
                     ZipCode = clientDataModel.ClientZipCode
-                    //CreatedDate = DateTime.Now,
-                    //CreatetdBy = System.Security.Principal.WindowsIdentity.GetCurrent().Name,
-                    //LastModifiedDate = DateTime.Now,
-                    //LastModifiedBy = System.Security.Principal.WindowsIdentity.GetCurrent().Name
                 };
 
                 _context.Add(client);
                 await _context.SaveChangesAsync();
                 clients = await _context.Clients.ToListAsync();
-                clientId = clients.FirstOrDefault(c => c.Email == clientDataModel.ClientEmail).Id;
+                clientId = client.Id;
             }
             else
             {
@@ -253,14 +254,12 @@ namespace EShopPUA.Controllers
                 OrderStatusId = 1,
                 PaymentStatusId = 1,
                 PaymentMethodId = (int)clientDataModel.PaymentId,
-                //StartDate = DateTime.Now,
-                //EndDate = null,
                 Price = (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)
             };
             _context.Add(order);
             await _context.SaveChangesAsync();
             IEnumerable<Order> orders = await _context.Orders.ToListAsync();
-            int orderId = orders.Single(o => o.Price == (int)cart.Sum(item => item.Product.Price * item.ProductQuantity)).Id;
+            int orderId = order.Id;
             foreach (var item in cart)
             {
                 OrderItem orderItem = new OrderItem
@@ -273,7 +272,7 @@ namespace EShopPUA.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("OrderPlaced");
+            return RedirectToAction("OrderPlaced", clientDataModel);
         }
 
         //isExist - gets the id of the product
